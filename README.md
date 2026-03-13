@@ -124,6 +124,33 @@ run:
 - internal/report - преобразование Violation в analysis.Diagnostic.
 - internal/golangci - точка интеграции с golangci-lint.
 
+Примерная структура проекта:
+
+```text
+go-log-linter/
+├── cmd/
+│   └── loglint/
+│       └── main.go           # entrypoint для go vet (singlechecker)
+├── internal/
+│   ├── analyzer/             # анализатор на базе go/analysis
+│   ├── core/                 # LogEntry, Rule, Violation
+│   ├── engine/               # пайплайн extractors + rules
+│   ├── extractors/           # парсинг slog/zap вызовов
+│   ├── inspectors/           # вспомогательные проверки текста/AST
+│   ├── rules/                # lowercase, english, symbols, sensitive
+│   ├── report/               # преобразование в analysis.Diagnostic
+│   ├── config/               # загрузка loglint.json
+│   ├── golangci/             # экспорт Analyzers для golangci-lint
+│   └── tools/                # фиксация зависимостей инструментов
+├── testdata/
+│   └── analyzer/             # сценарии для analysistest
+├── .github/
+│   └── workflows/ci.yml      # CI для сборки и тестов
+├── go.mod
+├── go.sum
+└── README.md
+```
+
 ### Бонусные задания
 
 В проекте реализованы все бонусные задачи:
