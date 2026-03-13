@@ -25,11 +25,17 @@ func (e *ZapExtractor) Match(call *ast.CallExpr, _ *analysis.Pass) bool {
 		return false
 	}
 
+	// Поддерживаем два типа вызовов:
+	// 1) zap.L().Info("msg")
+	// 2) logger.Info("msg") / log.Info("msg") - когда zap-логгер хранится в переменной
 	if _, ok := sel.X.(*ast.CallExpr); ok {
+		// Любой вызов вида something().Info(...) интерпретируем как zap.L().Info(...)
 		return true
 	}
-	if _, ok := sel.X.(*ast.Ident); ok {
-		return true
+	if ident, ok := sel.X.(*ast.Ident); ok {
+		// Ограничиваемся типичными именами переменных-логгеров,
+		// чтобы не ловить все pkg.Func(...) как zap-вызовы.
+		return ident.Name == "logger" || ident.Name == "log"
 	}
 
 	return false
