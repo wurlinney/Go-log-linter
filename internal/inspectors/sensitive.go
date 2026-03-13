@@ -16,6 +16,7 @@ var defaultSensitiveKeywords = []string{
 	"jwt",
 	"credential",
 	"cookie",
+	"session",
 }
 
 // ContainsSensitiveKeywordWithKeywords использует дефолтный список и дополнительные слова.
